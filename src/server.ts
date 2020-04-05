@@ -1,50 +1,22 @@
 import express from 'express';
 import compression from 'compression';
 import cors from 'cors'; 
-import { IResolvers, makeExecutableSchema } from 'graphql-tools';
-import { GraphQLSchema } from 'graphql';
-import graphQLHTTP from 'express-graphql';
+import schema from './schema';
+import { ApolloServer } from 'apollo-server-express';
+import { createServer } from 'http';
 
 const app = express();
 
 app.use('*',cors());
 app.use(compression());
 
+const server = new ApolloServer({
+    schema ,
+    introspection : true
+})
 
-const typeDefs = `
-
-    type Query {
-        hola : String!
-        holaConNombre(nombre : String!):String!
-        holaAlCursoGraphQL : String!
-    }
-`;
-
-const resolvers  : IResolvers = {
-    Query : {
-        
-        hola() : string {
-            return 'Hola mundo'
-        },
-        holaConNombre(_:void,{ nombre }): string{
-            return `Hola mundo ${nombre}`
-        },
-        holaAlCursoGraphQL() : string {
-            return 'Hola a todos'
-        }
-    }
-} 
-
-const schema : GraphQLSchema = makeExecutableSchema({
-    typeDefs ,
-    resolvers
-});
-
-
-app.use('/',graphQLHTTP({
-    schema,
-    graphiql : true
-}))
+server.applyMiddleware({app});
 
 const PORT = 5300;
-app.listen({port:PORT},()=> console.log(`Hola mundo API Graphql http://localhost:${PORT}/graphql`))
+const httpServer  = createServer(app)
+httpServer.listen({port:PORT},()=> console.log(`Hola mundo API Graphql http://localhost:${PORT}/graphql`))
