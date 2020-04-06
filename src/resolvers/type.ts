@@ -6,6 +6,7 @@ const type  : IResolvers = {
     Estudiante : {        
         courses : parent => {
                 const cursosLista : Array<any> = [];
+                
                 parent.courses.map((curso:string)=>{
                     cursosLista.push( _.filter(database.cursos,['id',curso] )[0])
                 });
@@ -14,7 +15,7 @@ const type  : IResolvers = {
     },
     Curso : {
         students : parent => {
-            
+
             const listaEstudianetes  : Array<any> = [];
             const idCurso  = parent.id
 
