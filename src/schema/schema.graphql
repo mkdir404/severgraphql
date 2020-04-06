@@ -1,5 +1,65 @@
 type Query {
-    hola : String!
-    holaConNombre(nombre : String!):String!
-    holaAlCursoGraphQL : String!
+    "Lista de estudiantes de la academia"
+    estudiantes : [Estudiante!]!
+    "Informacion de un solo estudiante seleccionado por id"
+    estudiante ( id:ID! ): Estudiante!
+    "Lista de cursos"
+    cursos : [Curso!]!
+     "Informacion de un solo curso seleccionado por id"
+    curso ( id:ID! ): Curso!
+}
+
+type Mutation {
+    cursoNuevo(curso:CursoInput!) : Curso!
+    modificadorCurso(curso:CursoInput) : Curso !
+    eliminarCurso(id:ID!) : Curso!
+}
+
+input CursoInput {
+    id : ID
+    title : String!
+    description : String!
+    clases: Int!
+    time : Float !
+    logo : String!
+    level : Nivel = TODOS
+    path : String!
+    teacher : String!
+}
+
+type Estudiante {
+    "identificador del estudiante"
+    id : ID!
+    name : String! 
+    email : String!
+    website : String
+    courses : [Curso!]
+} 
+
+type Curso {
+    id : ID!
+    title : String!
+    description : String!
+    clases: Int!
+    time : Float !
+    logo : String!
+    level : Nivel!
+    path : String!
+    teacher : String!
+    students : [Estudiante]
+    reviews : [Valoracion!]!
+}
+
+enum  Nivel {
+    TODOS
+    NOVATO
+    INTERMEDIO
+    EXPERTO
+}
+
+type Valoracion {
+    id : ID!
+    name : String!
+    points : Float!
+    comment : String
 }
